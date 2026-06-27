@@ -1,0 +1,159 @@
+{ config, pkgs, ... }:
+
+{
+  environment.etc."xdg/nvim/init.lua" = {
+    text = ''
+
+-- ==========================================
+-- 1. LEADER KEY
+-- ==========================================
+vim.g.mapleader = " "
+
+-- ==========================================
+-- 2. BOOTSTRAP LAZY.NVIM
+-- ==========================================
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+vim.opt.termguicolors = true
+vim.cmd.colorscheme("retrobox")
+
+-- ==========================================
+-- 3. PLUGINS
+-- ==========================================
+require("lazy").setup({
+
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      vim.lsp.enable('clangd')
+      vim.lsp.enable('pylsp')
+      vim.lsp.enable('jdtls')
+      vim.lsp.enable('ts_ls')
+      vim.lsp.enable('rust_analyzer')
+      vim.lsp.enable('tailwindcss')
+      vim.lsp.enable('lua_ls')
+      vim.lsp.enable('html')
+
+      -- Key mappings
+      local keymap = vim.keymap.set
+      keymap("n", "gd", vim.lsp.buf.definition)
+      keymap("n", "gr", vim.lsp.buf.references)
+      keymap("n", "<leader>dd", vim.lsp.buf.hover)
+      keymap("n", "gl", vim.diagnostic.open_float)
+      keymap("n", "<leader>en", vim.diagnostic.goto_next)
+      keymap("n", "<leader>ep", vim.diagnostic.goto_prev)
+    end
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        mapping = {
+          ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 's' }),
+          ['<CR>'] = cmp.mapping(function(fallback)
+              if cmp.visible() then
+                  cmp.confirm({ select = true })
+              else
+                  fallback()
+              end
+          end, { 'i', 's' }),
+          ['<S-CR>'] = cmp.mapping(function(fallback)
+              fallback()
+          end, { 'i', 's' }),
+        },
+        sources = cmp.config.sources({ { name = 'nvim_lsp' } })
+      })
+    end
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      local ts = require("nvim-treesitter")
+      ts.setup({})
+      ts.install({ "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "python", "javascript", "java", "c", "tsx" })
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end
+  }
+})
+
+-- ==========================================
+-- 4. OPTIONS
+-- ==========================================
+local opt = vim.opt
+opt.expandtab = true
+opt.shiftwidth = 4
+opt.softtabstop = 4
+opt.tabstop = 4
+opt.scrolloff = 20
+opt.number = true
+opt.relativenumber = true
+opt.smartindent = true
+opt.smartcase = true
+opt.ignorecase = true
+opt.showmatch = true
+opt.backspace = { "indent", "eol", "start" }
+opt.cursorline = true
+opt.ttimeoutlen = 10
+opt.splitright = true
+opt.splitbelow = true
+opt.signcolumn = "number"
+opt.showmode = false
+
+-- ==========================================
+-- 5. KEYBINDS
+-- ==========================================
+local keymap = vim.keymap.set
+
+-- Windows
+keymap("n", "<leader>cd", ":Ex<CR>")
+keymap("n", "<leader>sv", ":vsplit<CR>")
+keymap("n", "<leader>sh", ":split<CR>")
+keymap("n", "<C-Right>", "<C-w>l")
+keymap("n", "<C-Left>", "<C-w>h")
+keymap("n", "<C-Down>", "<C-w>j")
+keymap("n", "<C-Up>", "<C-w>k")
+keymap("n", "<M-Up>", ":resize +10<CR>")
+keymap("n", "<M-Down>", ":resize -10<CR>")
+keymap("n", "<M-Left>", ":vertical resize +10<CR>")
+keymap("n", "<M-Right>", ":vertical resize -10<CR>")
+keymap("n", "<C-M-Right>", "<C-w><S-l>")
+keymap("n", "<C-M-Left>", "<C-w><S-h>")
+keymap("n", "<C-M-Up>", "<C-w><S-k>")
+keymap("n", "<C-M-Down>", "<C-w><S-j>")
+
+-- Terminals
+keymap("n", "<leader>th", ":split | term<CR>")
+keymap("n", "<leader>tv", ":vsplit | term<CR><C-w>l")
+keymap("n", "<leader>tt", ":term<CR>")
+keymap("t", "<Esc>", "<C-\\><C-n>")
+
+-- Buffers
+keymap("n", "<leader>bb", ":ls<CR>:b <C-r>=input('Buffer number: ')<CR><CR>")
+keymap("n", "<leader>bd", ":bd<CR>")
+keymap("n", "<leader>bq", "<C-w>q")
+
+-- Misc
+keymap("n", "<leader>rc", ":Ex ~/.config/nvim<CR>")
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd("nohlsearch")
+  return "<Esc>"
+end, { expr = true, silent = true })
+    
+    '';
+    mode = "0644";
+  };
+}
