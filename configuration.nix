@@ -68,10 +68,10 @@ in
     # Basic utils
     vim wget git firefox google-chrome pcmanfm
     pavucontrol mousepad lazygit curl eom evince
-    onlyoffice-desktopeditors jre
+    onlyoffice-desktopeditors
 
     # Programming
-    gcc neovim tree-sitter python3 gh lazygit
+    gcc neovim tree-sitter python3 gh lazygit jre
 
     # wm Packages
     wl-clipboard mako blueman wofi waybar nwg-look
@@ -91,6 +91,7 @@ in
         "application/x-ms-dos-executable" 
         "application/x-msdownload" 
         "application/x-wine-extension-exe" 
+        "application/vnd.microsoft.portable-executable"
       ];
       exec = "${protontricks-wrapper}/bin/protontricks-cwd-launch %f";
     })
