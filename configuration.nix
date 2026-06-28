@@ -6,7 +6,7 @@ let
   protontricks-wrapper = pkgs.writeShellScriptBin "protontricks-cwd-launch" ''
     if [ -n "$1" ]; then
       cd "$(dirname "$1")"
-      exec ${pkgs.protontricks}/bin/protontricks-launch "$1"
+      exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.protontricks}/bin/protontricks-launch "$1"
     fi
   '';
 in
@@ -145,7 +145,7 @@ in
   
   environment.shellAliases = {
     nrs = "sudo nixos-rebuild switch";
-    ncc = "sudo nvim /etc/nixos/";
+    ncc = "nvim /etc/nixos/";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
