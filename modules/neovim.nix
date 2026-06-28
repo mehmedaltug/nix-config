@@ -36,8 +36,6 @@ require("lazy").setup({
       vim.lsp.enable('jdtls')
       vim.lsp.enable('ts_ls')
       vim.lsp.enable('rust_analyzer')
-      vim.lsp.enable('tailwindcss')
-      vim.lsp.enable('lua_ls')
       vim.lsp.enable('html')
 
       -- Key mappings
@@ -147,7 +145,7 @@ keymap("n", "<leader>bd", ":bd<CR>")
 keymap("n", "<leader>bq", "<C-w>q")
 
 -- Misc
-keymap("n", "<leader>rc", ":Ex ~/.config/nvim<CR>")
+keymap("n", "<leader>rc", ":Ex /etc/nixos<CR>")
 vim.keymap.set("n", "<Esc>", function()
   vim.cmd("nohlsearch")
   return "<Esc>"
