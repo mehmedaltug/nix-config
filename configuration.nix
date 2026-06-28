@@ -101,7 +101,6 @@ in
   programs.steam.enable = true;
   programs.steam.protontricks.enable = true;
   programs.gamemode.enable = true;
-  programs.waybar.enable = true;
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -142,6 +141,11 @@ in
        "defaults"
        "rw"
      ];
+  };
+  
+  environment.shellAliases = {
+    nrs = "sudo nixos-rebuild switch";
+    ncc = "sudo nvim /etc/nixos/";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
