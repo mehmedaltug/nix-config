@@ -68,7 +68,7 @@ in
     # Basic utils
     vim wget git firefox google-chrome pcmanfm
     pavucontrol mousepad lazygit curl eom evince
-    onlyoffice-desktopeditors
+    onlyoffice-desktopeditors jre
 
     # Programming
     gcc neovim tree-sitter python3 gh lazygit
@@ -146,6 +146,7 @@ in
   environment.shellAliases = {
     nrs = "sudo nixos-rebuild switch";
     ncc = "nvim /etc/nixos/";
+    nix-cleanup = "sudo nix-collect-garbage -d";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
