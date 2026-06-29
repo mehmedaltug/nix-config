@@ -3,10 +3,10 @@
 
 
 let
-  protontricks-wrapper = pkgs.writeShellScriptBin "protontricks-cwd-launch" ''
+  protontricks-wrapper = pkgs.writeShellScriptBin "protontricks-custom-launch" ''
     if [ -n "$1" ]; then
       cd "$(dirname "$1")"
-      exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.protontricks}/bin/protontricks-launch "$1"
+      exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.gamescope}/bin/gamescope -w 1920 -h 1080 -- ${pkgs.protontricks}/bin/protontricks-launch --appid $GENERIC_APPID "$1"
     fi
   '';
 in
@@ -86,7 +86,7 @@ in
     exfat ntfs3g
     (makeDesktopItem {
       name = "protontricks-cwd";
-      desktopName = "Protontricks (CWD Fix)";
+      desktopName = "Protontricks Custom Launcher";
       comment = "Launch EXE inside its own directory using Protontricks";
       icon = "steam";
       terminal = false;
@@ -97,7 +97,7 @@ in
         "application/x-wine-extension-exe" 
         "application/vnd.microsoft.portable-executable"
       ];
-      exec = "${protontricks-wrapper}/bin/protontricks-cwd-launch %f";
+      exec = "${protontricks-wrapper}/bin/protontricks-custom-launch %f";
     })
   ];
   fonts.packages = with pkgs; [
@@ -106,6 +106,7 @@ in
   programs.steam.enable = true;
   programs.steam.protontricks.enable = true;
   programs.gamemode.enable = true;
+  programs.gamescope.enable = true;
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -154,6 +155,10 @@ in
     ncc = "nvim /etc/nixos/";
     nix-cleanup = "sudo nix-collect-garbage -d";
   };
+  environment.sessionVariables = {
+    GENERIC_APPID = "3232449578";
+  };
+
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "26.05";
