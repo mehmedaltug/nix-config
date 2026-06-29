@@ -31,6 +31,10 @@ in
     enable = true;
     powerOnBoot = false;
   };
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
 
   time.timeZone = "Europe/Istanbul";
 
@@ -68,7 +72,7 @@ in
     # Basic utils
     vim wget git firefox google-chrome pcmanfm
     pavucontrol mousepad lazygit curl eom evince
-    onlyoffice-desktopeditors
+    onlyoffice-desktopeditors unrar xarchiver
 
     # Programming
     gcc neovim tree-sitter python3 gh lazygit jre
@@ -120,6 +124,7 @@ in
   };
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
+  services.xserver.videoDrivers = ["amdgpu"];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
